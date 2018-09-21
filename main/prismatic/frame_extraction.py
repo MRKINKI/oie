@@ -41,7 +41,7 @@ class FrameExtraction:
         return idx
 
     def second_level_frame(self, arcs, node):  # 最底层叶节点合并
-        frame = {'type': node.netag}
+        frame = {'ner': node.netag, 'pos': node.postag}
         for relation_type in node.children:
             if relation_type in self.unused_relation:
                 continue
@@ -53,7 +53,7 @@ class FrameExtraction:
         return frame
 
     def first_level_frame(self, arcs, node):  # SLR second_level_relation
-        frame = {'head_node': {'word': node.word, 'node': node.idx, 'SLR': {'type': node.netag}}}
+        frame = {'head_node': {'word': node.word, 'node': node.idx, 'SLR': {'ner': node.netag, 'pos': node.postag}}}
         for relation_type in node.children:
             if relation_type in self.unused_relation:
                 continue
@@ -75,7 +75,7 @@ class FrameExtraction:
         node.tree_depth = max(depths) + 1
         return max(depths) + 1
         
-    def build_frames(self,arcs):
+    def build_frames(self, arcs):
 
         root_idx = self.get_head_idx(arcs)
         self.add_depth_arcs(arcs, root_idx, -1)
@@ -104,9 +104,11 @@ class FrameExtraction:
         while len(node_queue):
             node = node_queue.pop()
             if node.relation == 'ROOT':
-                frame = {'ROOT': {'word': node.word, 'node': node.idx, 'SLR': {'type': node.postag}}}
+                frame = {'ROOT': {'word': node.word, 'node': node.idx,
+                                  'SLR': {'ner': node.postag, 'pos': node.postag}}}
             else:
-                frame = {'head_node': {'word': node.word, 'node': node.idx, 'SLR': {'type': node.netag}}}
+                frame = {'head_node': {'word': node.word, 'node': node.idx,
+                                       'SLR': {'ner': node.netag, 'pos': node.postag}}}
             
             for relation_type in node.children:
                 if relation_type in self.unused_relation:

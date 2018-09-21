@@ -11,7 +11,7 @@ class FrameChange:
             frame[relation] = sub_frame['word']
             frame[relation+'@node'] = sub_frame['node']
             for sub_relation, value in sub_frame['SLR'].items():
-                if sub_relation == 'type' and '-' in value:
+                if sub_relation == 'ner' and '-' in value:
                     value = value.split('-')[1]
                 if isinstance(value, list):
                     if len(value) > 1:
